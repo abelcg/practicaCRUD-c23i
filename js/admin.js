@@ -119,7 +119,8 @@ function guardarLocalStorage() {
 
 function crearFila(producto) {
   let tablaProducto = document.querySelector("#tablaProducto");
-  tablaProducto.innerHTML = `<tr>
+  //la asignación es con el operador de asignación de adición para concatenar con lo que ya tengo
+  tablaProducto.innerHTML += `<tr>
   <td>${producto.codigo}</td>
   <td>${producto.producto}</td>
   <td>${producto.descripcion}</td>
@@ -136,6 +137,6 @@ function crearFila(producto) {
 function cargaInicial() {
     if(listaProductos.length > 0) {
         //crear fila
-        listaProductos.map((itemProducto)=> crearFila(itemProducto))
+        listaProductos.forEach((itemProducto)=> crearFila(itemProducto))
     }
 }
