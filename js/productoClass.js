@@ -31,6 +31,16 @@ export class Producto{
     set modificarProducto(nuevoProducto){
         this.producto = nuevoProducto;
     }
+  
+    set modificarDescripcion(nuevaDescripcion){
+        this.descripcion = nuevaDescripcion;
+    }
 
-    //tarea definir los demás setters
+    set modificarCantidad(nuevaCantidad){
+        this.cantidad = nuevaCantidad;
+    }
+
+    set modicarUrl(nuevaUrl){
+        this.url = nuevaUrl;
+    }
 }
