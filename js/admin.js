@@ -137,5 +137,6 @@ function cargaInicial() {
     if(listaProductos.length > 0) {
         //crear fila
         listaProductos.map((itemProducto)=> crearFila(itemProducto))
+        //listaProductos.forEach((itemProducto)=> crearFila(itemProducto))
     }
 }
