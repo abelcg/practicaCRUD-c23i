@@ -18,8 +18,7 @@ let formProducto = document.getElementById("formProducto");
 let productoExistente = false; //variable bandera: si el productoExistente es false quiero crear,si true quiero modificar el producto existente
 
 //Si hay productos en localStorage quiero guardarlo en el array de productos si no que sea un array vacio
-let listaProductos =
-  JSON.parse(localStorage.getItem("arrayProductosKey")) || [];
+let listaProductos = JSON.parse(localStorage.getItem("arrayProductosKey")) || [];
 
 console.log(listaProductos);
 //Asociar un evento a cada elemento obtenido
@@ -137,6 +136,6 @@ function crearFila(producto) {
 function cargaInicial() {
     if(listaProductos.length > 0) {
         //crear fila
-        listaProductos.forEach((itemProducto)=> crearFila(itemProducto))
+        listaProductos.map((itemProducto)=> crearFila(itemProducto))
     }
 }
