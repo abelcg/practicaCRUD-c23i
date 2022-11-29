@@ -1,100 +1,26 @@
+import {
+  campoRequerido,
+  validarNumeros,
+  validarURL,
+  validarGeneral,
+} from "./validaciones.js";
+import { Producto } from "./productoClass.js";
+
 //traigo los elementos que necesito del html
 let campoCodigo = document.getElementById("codigo");
-console.log(campoCodigo);
+//console.log(campoCodigo);
 let campoProducto = document.getElementById("producto");
 let campoDescripcion = document.getElementById("descripcion");
 let campoCantidad = document.getElementById("cantidad");
 let campoURL = document.getElementById("url");
 let formProducto = document.getElementById("formProducto");
 
-//validaciones
-const campoRequerido = (input) => {
-  console.log("desde campo requerido");
-  console.log(input.value);
-  if (input.value.trim().length > 0) {
-    console.log("aqui esta todo bien");
-    input.className = "form-control is-valid";
-    return true;
-  } else {
-    console.log("aqui muestro el error");
-    input.className = "form-control is-invalid";
-    return false;
-  }
-};
+let productoExistente = false; //variable bandera: si el productoExistente es false quiero crear,si true quiero modificar el producto existente
 
-const validarNumeros = (input) => {
-  //vamos a crear una expresion regular
-  let patron = /^[0-9]{1,3}$/;
-  //el método test compara un string con el patron y devuelve true o false si hay match p no
-  //regex.test(string a validar)
-  if (patron.test(input.value)) {
-    //cumpla con la expresion regular
-    input.className = "form-control is-valid";
-    return true;
-  } else {
-    input.className = "form-control is-invalid";
-    return false;
-  }
-};
+//Si hay productos en localStorage quiero guardarlo en el array de productos si no que sea un array vacio
+let listaProductos = JSON.parse(localStorage.getItem("arrayProductosKey")) || [];
 
-const validarURL = (input) => {
-  let patron = /^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/;
-  if (patron.test(input.value)) {
-    //cumpla con la expresion regular
-    input.className = "form-control is-valid";
-    return true;
-  } else {
-    input.className = "form-control is-invalid";
-    return false;
-  }
-};
-
-const validarGeneral = (
-  campoCodigo,
-  campoProducto,
-  campoDescripcion,
-  campoCantidad,
-  campoURL
-) => {
-  let alerta = document.querySelector("#msjAlerta");
-  //comprobar que pasen cada una de las validaciones y si no pasan mostrar el alert
-  if (
-    campoRequerido(campoCodigo) &&
-    campoRequerido(campoProducto) &&
-    campoRequerido(campoDescripcion) &&
-    validarNumeros(campoCantidad) &&
-    validarURL(campoURL)
-  ) {
-    console.log(
-      "validación correcta todos los datos están listos para ser enviados"
-    );
-    alerta.className = "alert alert-danger my-3 d-none";
-    return true;
-  } else {
-    console.log("validación incorrecta, datos erroneos");
-    alerta.className = "alert alert-danger my-3";
-    return false;
-  }
-};
-
-const guardarProducto = (e) => {
-  //para prevenir la actualizacion de la página
-  e.preventDefault();
-  //verificar que todos los datos sean validos
-
-  if (
-    validarGeneral(
-      campoCodigo,
-      campoProducto,
-      campoDescripcion,
-      campoCantidad,
-      campoURL
-    )
-  ) {
-    console.log('los datos correctos listos para enviar');
-  }
-};
-
+console.log(listaProductos);
 //Asociar un evento a cada elemento obtenido
 
 campoCodigo.addEventListener("blur", () => {
@@ -120,5 +46,96 @@ campoURL.addEventListener("blur", () => {
   console.log(" desde  url");
   validarURL(campoURL);
 });
-
 formProducto.addEventListener("submit", guardarProducto);
+
+
+//llamo a carga inicial: si tengo productos en el localStorage, que lo muestre en tabla de productos
+cargaInicial();
+
+//empieza la logica del crud
+
+function guardarProducto(e) {
+  //para prevenir la actualizacion de la página
+  e.preventDefault();
+  //verificar que todos los datos sean validos
+  if (
+    validarGeneral(
+      campoCodigo,
+      campoProducto,
+      campoDescripcion,
+      campoCantidad,
+      campoURL
+    )
+  ) {
+    //console.log("los datos correctos listos para enviar");
+    if (productoExistente === false) {
+      //crear producto
+      crearProducto();
+    } else {
+      //modificar porducto
+      modificarProducto();
+    }
+  }
+}
+
+function crearProducto() {
+  //crear un objeto producto
+  let productoNuevo = new Producto(
+    campoCodigo.value,
+    campoProducto.value,
+    campoDescripcion.value,
+    campoCantidad.value,
+    campoURL.value
+  );
+  console.log(productoNuevo);
+  //guardar cada objeto (producto) en una array de productos
+  listaProductos.push(productoNuevo);
+  console.log(listaProductos);
+  //limpiar formulario
+  limpiarFormulario();
+  //Guardar el array de productos dentro de localStorage
+  guardarLocalStorage();
+  //cargar el producto en la tabla
+  crearFila(productoNuevo);
+}
+
+function limpiarFormulario() {
+  //limpiamos los value del formulario
+  formProducto.reset();
+  //resetear las clases de los input
+  campoCodigo.className = "form-control";
+  campoProducto.className = "form-control";
+  campoDescripcion.className = "form-control";
+  campoCantidad.className = "form-control";
+  campoURL.className = "form-control";
+  //resetear la variable bandera o booleana para el caso de modificarProdcuto
+  productoExistente = false;
+}
+
+function guardarLocalStorage() {
+  localStorage.setItem("arrayProductosKey", JSON.stringify(listaProductos));
+}
+
+function crearFila(producto) {
+  let tablaProducto = document.querySelector("#tablaProducto");
+  //la asignación es con el operador de asignación de adición para concatenar con lo que ya tengo
+  tablaProducto.innerHTML += `<tr>
+  <td>${producto.codigo}</td>
+  <td>${producto.producto}</td>
+  <td>${producto.descripcion}</td>
+  <td>${producto.cantidad}</td>
+  <td>${producto.url}</td>
+  <td>
+    <button class="btn btn-warning" onclick='prepararEdicionProducto()'>Editar</button
+    ><button class="btn btn-danger" onclick='borrarProducto()'>Eliminar</button>
+  </td>
+  </tr>`;
+}
+
+
+function cargaInicial() {
+    if(listaProductos.length > 0) {
+        //crear fila
+        listaProductos.map((itemProducto)=> crearFila(itemProducto))
+    }
+}

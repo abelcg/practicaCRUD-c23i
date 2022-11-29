@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- agregar etiquetas meta -->
+    <meta name="description" content="crud de productos con vanilla js" />
+    <meta name="keywords" content="vanilla js, javascript, crud" />
+    <meta name="author" content="Abel Cordoba Gonzalez" />
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <title>Practica CRUD</title>
   </head>
@@ -57,7 +59,7 @@
               required
             />
             <div class="invalid-feedback">
-                Debe ingresar un código alfanumerico
+              Debe ingresar un código alfanumerico
             </div>
           </div>
           <div class="mb-3">
@@ -67,12 +69,19 @@
               class="form-control"
               id="producto"
               placeholder="Ej: Iron Man"
+              maxlength="10"
               required
             />
           </div>
           <div class="mb-3">
             <label for="descripcion" class="form-label">Descripción</label>
-            <textarea class="form-control" id="descripcion" rows="3" required></textarea>
+            <textarea
+              class="form-control"
+              id="descripcion"
+              rows="3"
+              maxlength="50"
+              required
+            ></textarea>
           </div>
           <div class="mb-3">
             <label for="cantidad" class="form-label">Cantidad</label>
@@ -81,6 +90,7 @@
               class="form-control"
               id="cantidad"
               placeholder="2"
+              maxlength="3"
               required
             />
           </div>
@@ -91,18 +101,41 @@
               class="form-control"
               id="url"
               placeholder="http://127.0.0.1:8080/images.jpg"
+              maxlength="200"
               required
             />
           </div>
           <button class="btn btn-primary" type="submit">Guardar</button>
         </form>
         <div class="alert alert-danger my-3 d-none" role="alert" id="msjAlerta">
-           Debe completar todos los campos requeridos
+          Debe completar todos los campos requeridos
+        </div>
+      </section>
+      <section>
+        <h2 class="display-3 text-center">Tabla de Productos</h2>
+        <hr />
+        <button class="btn btn-primary" id="btnNuevo">Nuevo</button>
+        <button class="btn btn-secondary">Cargar datos de prueba</button>
+        <div class="table-responsive">
+          <table class="table my-5">
+            <thead>
+              <tr>
+                <th scope="col">Cod.</th>
+                <th scope="col">Producto</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">URL</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tablaProducto">
+            </tbody>
+          </table>
         </div>
       </section>
     </main>
     <footer></footer>
     <script src="js/bootstrap.min.js"></script>
-    <script src="/js/admin.js"></script>
+    <script src="/js/admin.js" type="module"></script>
   </body>
 </html>
