@@ -79,6 +79,7 @@ function guardarProducto(e) {
 }
 
 function crearProducto() {
+  //codigoUnico() ---> retornar un código único---> codUnico
   //crear un objeto producto
   let productoNuevo = new Producto(
     campoCodigo.value,
@@ -95,6 +96,12 @@ function crearProducto() {
   limpiarFormulario();
   //Guardar el array de productos dentro de localStorage
   guardarLocalStorage();
+  //mostrar cartel al usuario
+  Swal.fire(
+    'Producto creado!',
+    'Su producto fue creado correctamente',
+    'success'
+  )
   //cargar el producto en la tabla
   crearFila(productoNuevo);
 }
@@ -126,7 +133,7 @@ function crearFila(producto) {
   <td>${producto.cantidad}</td>
   <td>${producto.url}</td>
   <td>
-    <button class="btn btn-warning" onclick='prepararEdicionProducto()'>Editar</button
+    <button class="btn btn-warning" onclick='prepararEdicionProducto("${producto.codigo}")'>Editar</button
     ><button class="btn btn-danger" onclick='borrarProducto()'>Eliminar</button>
   </td>
   </tr>`;
@@ -140,3 +147,31 @@ function cargaInicial() {
         //listaProductos.forEach((itemProducto)=> crearFila(itemProducto))
     }
 }
+
+window.prepararEdicionProducto = function (codigo){
+  console.log("desde editar");
+  console.log(codigo);
+  //buscar el producto en el array de productos
+  let productoBuscado = listaProductos.find((itemProducto) => itemProducto.codigo === codigo);
+  console.log(productoBuscado);
+  //mostrar el producto en formulario. No se debe de poder editar el codigo
+  campoCodigo.value = productoBuscado.codigo
+  campoProducto.value = productoBuscado.producto;
+  campoDescripcion.value = productoBuscado.descripcion;
+  campoCantidad.value = productoBuscado.cantidad;
+  campoURL.value = productoBuscado.url;
+
+  //modifico la variable bandera productoExistente
+  productoExistente = true;
+}
+
+function modificarProducto(){
+  // console.log('desde modificar');
+  //encontrar la posicion del elemento que quiero modificar dentro de mi array de productos
+  let indiceProducto = listaProductos.findIndex((itemProducto) => {
+    return itemProducto.codigo == campoCodigo.value;
+  });
+  console.log(indiceProducto);
+  //modificar los valores dentro del array
+  listaProductos[indiceProducto].producto = campoProducto.value
+};
