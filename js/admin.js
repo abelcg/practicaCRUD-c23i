@@ -52,6 +52,8 @@ formProducto.addEventListener("submit", guardarProducto);
 //llamo a carga inicial: si tengo productos en el localStorage, que lo muestre en tabla de productos
 cargaInicial();
 
+console.log(listaProductos);
+
 //empieza la logica del crud
 
 function guardarProducto(e) {
@@ -79,6 +81,7 @@ function guardarProducto(e) {
 }
 
 function crearProducto() {
+  //codigoUnico() ---> retornar un código único---> codUnico
   //crear un objeto producto
   let productoNuevo = new Producto(
     campoCodigo.value,
@@ -95,6 +98,12 @@ function crearProducto() {
   limpiarFormulario();
   //Guardar el array de productos dentro de localStorage
   guardarLocalStorage();
+  //mostrar cartel al usuario
+  Swal.fire(
+    'Producto creado!',
+    'Su producto fue creado correctamente',
+    'success'
+  )
   //cargar el producto en la tabla
   crearFila(productoNuevo);
 }
@@ -126,8 +135,8 @@ function crearFila(producto) {
   <td>${producto.cantidad}</td>
   <td>${producto.url}</td>
   <td>
-    <button class="btn btn-warning" onclick='prepararEdicionProducto()'>Editar</button
-    ><button class="btn btn-danger" onclick='borrarProducto()'>Eliminar</button>
+    <button class="btn btn-warning" onclick='prepararEdicionProducto("${producto.codigo}")'>Editar</button
+    ><button class="btn btn-danger" onclick="borrarProducto('${producto.codigo}')">Eliminar</button>
   </td>
   </tr>`;
 }
@@ -139,4 +148,55 @@ function cargaInicial() {
         listaProductos.map((itemProducto)=> crearFila(itemProducto))
         //listaProductos.forEach((itemProducto)=> crearFila(itemProducto))
     }
+}
+
+window.prepararEdicionProducto = function(codigo){
+  console.log("desde editar");
+  console.log(codigo);
+  //buscar el producto en el array de productos
+  let productoBuscado = listaProductos.find((itemProducto) => itemProducto.codigo === codigo);
+  console.log(productoBuscado);
+  //mostrar el producto en formulario. No se debe de poder editar el codigo
+  campoCodigo.value = productoBuscado.codigo
+  campoProducto.value = productoBuscado.producto;
+  campoDescripcion.value = productoBuscado.descripcion;
+  campoCantidad.value = productoBuscado.cantidad;
+  campoURL.value = productoBuscado.url;
+
+  //modifico la variable bandera productoExistente
+  productoExistente = true;
+}
+
+function modificarProducto(){
+  // console.log('desde modificar');
+  //encontrar la posicion del elemento que quiero modificar dentro de mi array de productos
+  let indiceProducto = listaProductos.findIndex((itemProducto) => {
+    return itemProducto.codigo == campoCodigo.value;
+  });
+  console.log(indiceProducto);
+  //modificar los valores dentro del array
+  listaProductos[indiceProducto].producto = campoProducto.value;
+  listaProductos[indiceProducto].descripcion = campoDescripcion.value;
+  listaProductos[indiceProducto].cantidad = campoCantidad.value;
+  listaProductos[indiceProducto].url = campoURL.value;
+
+  //actualizar el localStorage
+  guardarLocalStorage();
+  //actualizar la tabla
+  borrarTabla();
+  cargaInicial();
+  //mostrar cartel al usuario
+  Swal.fire(
+    'Producto Modificado!',
+    'Su producto fue modificado correctamente',
+    'success'
+  )
+  //limpiar el formulario
+  limpiarFormulario();
+};
+
+
+function borrarTabla(){
+    let tablaProducto = document.querySelector("#tablaProducto");
+    tablaProducto.innerHTML = "";
 }
