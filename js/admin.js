@@ -52,6 +52,8 @@ formProducto.addEventListener("submit", guardarProducto);
 //llamo a carga inicial: si tengo productos en el localStorage, que lo muestre en tabla de productos
 cargaInicial();
 
+console.log(listaProductos);
+
 //empieza la logica del crud
 
 function guardarProducto(e) {
@@ -134,7 +136,7 @@ function crearFila(producto) {
   <td>${producto.url}</td>
   <td>
     <button class="btn btn-warning" onclick='prepararEdicionProducto("${producto.codigo}")'>Editar</button
-    ><button class="btn btn-danger" onclick='borrarProducto()'>Eliminar</button>
+    ><button class="btn btn-danger" onclick="borrarProducto('${producto.codigo}')">Eliminar</button>
   </td>
   </tr>`;
 }
@@ -148,7 +150,7 @@ function cargaInicial() {
     }
 }
 
-window.prepararEdicionProducto = function (codigo){
+window.prepararEdicionProducto = function(codigo){
   console.log("desde editar");
   console.log(codigo);
   //buscar el producto en el array de productos
@@ -173,5 +175,28 @@ function modificarProducto(){
   });
   console.log(indiceProducto);
   //modificar los valores dentro del array
-  listaProductos[indiceProducto].producto = campoProducto.value
+  listaProductos[indiceProducto].producto = campoProducto.value;
+  listaProductos[indiceProducto].descripcion = campoDescripcion.value;
+  listaProductos[indiceProducto].cantidad = campoCantidad.value;
+  listaProductos[indiceProducto].url = campoURL.value;
+
+  //actualizar el localStorage
+  guardarLocalStorage();
+  //actualizar la tabla
+  borrarTabla();
+  cargaInicial();
+  //mostrar cartel al usuario
+  Swal.fire(
+    'Producto Modificado!',
+    'Su producto fue modificado correctamente',
+    'success'
+  )
+  //limpiar el formulario
+  limpiarFormulario();
 };
+
+
+function borrarTabla(){
+    let tablaProducto = document.querySelector("#tablaProducto");
+    tablaProducto.innerHTML = "";
+}
