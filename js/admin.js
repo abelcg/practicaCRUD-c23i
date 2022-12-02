@@ -14,6 +14,7 @@ let campoDescripcion = document.getElementById("descripcion");
 let campoCantidad = document.getElementById("cantidad");
 let campoURL = document.getElementById("url");
 let formProducto = document.getElementById("formProducto");
+let btnNuevo = document.querySelector("#btnNuevo");
 
 let productoExistente = false; //variable bandera: si el productoExistente es false quiero crear,si true quiero modificar el producto existente
 
@@ -48,6 +49,8 @@ campoURL.addEventListener("blur", () => {
   validarURL(campoURL);
 });
 formProducto.addEventListener("submit", guardarProducto);
+
+btnNuevo.addEventListener("click", limpiarFormulario);
 
 //llamo a carga inicial: si tengo productos en el localStorage, que lo muestre en tabla de productos
 cargaInicial();
@@ -169,31 +172,44 @@ window.prepararEdicionProducto = function (codigo) {
 };
 
 function modificarProducto() {
-  // console.log('desde modificar');
-  //encontrar la posicion del elemento que quiero modificar dentro de mi array de productos
-  let indiceProducto = listaProductos.findIndex((itemProducto) => {
-    return itemProducto.codigo == campoCodigo.value;
-  });
-  console.log(indiceProducto);
-  //modificar los valores dentro del array
-  listaProductos[indiceProducto].producto = campoProducto.value;
-  listaProductos[indiceProducto].descripcion = campoDescripcion.value;
-  listaProductos[indiceProducto].cantidad = campoCantidad.value;
-  listaProductos[indiceProducto].url = campoURL.value;
+  Swal.fire({
+    title: "Seguro que desea modificar este producto?",
+    text: "La acción no podrá revertirse!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Confirmar",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // console.log('desde modificar');
+      //encontrar la posicion del elemento que quiero modificar dentro de mi array de productos
+      let indiceProducto = listaProductos.findIndex((itemProducto) => {
+        return itemProducto.codigo == campoCodigo.value;
+      });
+      console.log(indiceProducto);
+      //modificar los valores dentro del array
+      listaProductos[indiceProducto].producto = campoProducto.value;
+      listaProductos[indiceProducto].descripcion = campoDescripcion.value;
+      listaProductos[indiceProducto].cantidad = campoCantidad.value;
+      listaProductos[indiceProducto].url = campoURL.value;
 
-  //actualizar el localStorage
-  guardarLocalStorage();
-  //actualizar la tabla
-  borrarTabla();
-  cargaInicial();
-  //mostrar cartel al usuario
-  Swal.fire(
-    "Producto Modificado!",
-    "Su producto fue modificado correctamente",
-    "success"
-  );
-  //limpiar el formulario
-  limpiarFormulario();
+      //actualizar el localStorage
+      guardarLocalStorage();
+      //actualizar la tabla
+      borrarTabla();
+      cargaInicial();
+      //mostrar cartel al usuario
+      Swal.fire(
+        "Producto Modificado!",
+        "Su producto fue modificado correctamente",
+        "success"
+      );
+      //limpiar el formulario
+      limpiarFormulario();
+    }
+  });
 }
 
 function borrarTabla() {
@@ -204,26 +220,39 @@ function borrarTabla() {
 window.borrarProducto = function (codigo) {
   console.log("desde borrar");
   console.log(codigo);
-  //opcion1: encontrar la posicion o el indice del elemento en el array y borrarlo
-  //1ero: encontrar el indice con findIndex y usar splice(indice, 1)
-  //Opcion 2 usando filter
-  let nuevaListaProdutos = listaProductos.filter((itemProducto) => {
-    return itemProducto.codigo !== codigo;
+  Swal.fire({
+    title: "Seguro que desea eliminar este producto?",
+    text: "La acción no podrá revertirse!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Confirmar",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      //opcion1: encontrar la posicion o el indice del elemento en el array y borrarlo
+      //1ero: encontrar el indice con findIndex y usar splice(indice, 1)
+      //Opcion 2 usando filter
+      let nuevaListaProdutos = listaProductos.filter((itemProducto) => {
+        return itemProducto.codigo !== codigo;
+      });
+
+      console.log(nuevaListaProdutos);
+      //actualizar el array original y localStorage
+      listaProductos = nuevaListaProdutos;
+      guardarLocalStorage();
+
+      //actualizar la tabla
+      borrarTabla();
+      cargaInicial();
+
+      //mostrar cartel al usuario
+      Swal.fire(
+        "Producto eliminado!",
+        "Su producto fue eliminado correctamente",
+        "success"
+      );
+    }
   });
-
-  console.log(nuevaListaProdutos);
-  //actualizar el array original y localStorage
-  listaProductos = nuevaListaProdutos;
-  guardarLocalStorage();
-
-  //actualizar la tabla
-  borrarTabla();
-  cargaInicial();
-
-  //mostrar cartel al usuario
-  Swal.fire(
-    "Producto eliminado!",
-    "Su producto fue eliminado correctamente",
-    "success"
-  );
 };
