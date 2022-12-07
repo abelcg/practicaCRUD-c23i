@@ -4,7 +4,12 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- agregar etiquetas meta -->
+    <meta
+      name="description"
+      content="crud de productos con Vanilla javascript"
+    />
+    <meta name="keywords" content="crud, js, vanilla javascript" />
+    <meta name="author" content="Abel Cordoba Gonzalez" />
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <title>Practica CRUD</title>
   </head>
@@ -27,19 +32,30 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="index.html">Inicio</a>
+                <a class="nav-link active" aria-current="page" href="index.html"
+                  >Inicio</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link"  href="admin.html">Admin</a>
+                <a class="nav-link" href="admin.html">Admin</a>
               </li>
             </ul>
           </div>
         </div>
       </nav>
     </header>
-    <main></main>
+    <main class="container">
+      <section class="my-5">
+        <h1 class="display-3 text-center text-primary">
+          Catálogo de productos
+        </h1>
+        <hr />
+        <article class="row" id="grilla">
+        </article>
+      </section>
+    </main>
     <footer></footer>
     <script src="js/bootstrap.min.js"></script>
-    <script src="/js/admin.js" type="module"></script>
+    <script src="js/app.js"></script>
   </body>
 </html>
