@@ -317,10 +317,10 @@ function cargarDatosPrueba(){
     },
   ];
 
- if (!localStorage.getItem('arrayProductoKey')) {
+ if (!localStorage.getItem("arrayProductoKey")) {
    // quiero agregar los datos de productos
    console.log('cargar datos prueba');
-   localStorage.setItem('arrayProductoKey', JSON.stringify(datos));
+   localStorage.setItem("arrayProductoKey", JSON.stringify(datos));
    listaProductos = datos;
    //mostar en la tabla
    listaProductos.forEach(itemProducto => {
