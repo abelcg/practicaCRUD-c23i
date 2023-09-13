@@ -6,7 +6,7 @@ import {
 } from "./validaciones.js";
 import { Producto } from "./productoClass.js";
 
-//traigo los elementos que necesito del html
+//1- traigo los elementos que necesito del html
 let campoCodigo = document.getElementById("codigo");
 //console.log(campoCodigo);
 let campoProducto = document.getElementById("producto");
@@ -24,7 +24,22 @@ let listaProductos =
   JSON.parse(localStorage.getItem("arrayProductosKey")) || [];
 
 console.log(listaProductos);
-//Asociar un evento a cada elemento obtenido
+//2- Asociar un evento a cada elemento obtenido
+
+/* 
+const handleFocus = ()=>{
+  console.log('desde handleFocus)
+}
+
+campoCodigo.addEventListener("focus", handleFocus);
+*/
+
+/* campoCodigo.addEventListener("blur", () => {
+  console.log('desde código');
+});
+ */
+
+//3- validaciones
 
 campoCodigo.addEventListener("blur", () => {
   campoRequerido(campoCodigo);
@@ -59,7 +74,7 @@ cargaInicial();
 
 console.log(listaProductos);
 
-//empieza la logica del crud
+//4- empieza la logica del crud
 
 function guardarProducto(e) {
   //para prevenir la actualizacion de la página
